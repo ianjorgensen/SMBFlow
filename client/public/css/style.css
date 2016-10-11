@@ -14,7 +14,19 @@ body {
 }
 
 section {
-  padding: 50px 30px;
+  padding-top: 300px;
+  padding-left: 30px;
+}
+
+.test-section {
+  padding-top: 100px;
+}
+
+.test-section-stdout {
+  display: none;
+  margin: 0;
+  padding: 20px 30px;
+  line-height: 22px;
 }
 
 h1 {
@@ -23,14 +35,12 @@ h1 {
 }
 
 .cartridge {
-  padding-bottom: 20px;
-  width: 122px;
+  padding: 30px;
   overflow: hidden;
 }
 
 .cartridge-image {
   width: 200px;
-  margin-left: -42px;
   /*-webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
   -o-transform: rotate(90deg);
@@ -55,6 +65,18 @@ h1 {
 }
 
 
-.home-section, .applySample-section, .test-section {
+.home-section, .applySample-section, .test-section, .cartridge {
   display: none;
+}
+
+.test-section-toggle {
+  position: absolute;
+  bottom: 20px !important;
+  right: 20px !important;
+}
+
+.test-section-debug-toggle {
+  position: absolute;
+  bottom: 20px !important;
+  right: 60px !important;
 }

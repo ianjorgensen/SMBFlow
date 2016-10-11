@@ -4,7 +4,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+
     <title>SMB Lateral Flow Analyzer</title>
+
+    <link rel="manifest" href="/manifest.json">
 
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/material.min.css">
@@ -17,8 +21,10 @@
       crossorigin="anonymous"></script>
     <script src="js/material.min.js"></script>
     <script src="js/index.js"></script>
+    <script src="js/chart.js"></script>
     <script src="js/dialog-polyfill.js"></script>
     <script src="//d3js.org/d3.v4.min.js"></script>
+    <script src="//localhost/socket.io/socket.io.js"></script>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   </head>
@@ -37,16 +43,26 @@
       <div class="mdl-spinner mdl-js-spinner is-active"></div>
     </section>
     <section class='test-section'>
+      <div class='test-section-container'>
+      <button class="applySample-section-close-button mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+        <i class="material-icons">close</i>
+      </button>
       <div class='test-section-chart'></div>
-      <div>
-        <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="icon-toggle-1">
-          <input type="checkbox" id="icon-toggle-1" class="mdl-icon-toggle__input" checked>
+
+        <label class="test-section-toggle mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="icon-toggle-1">
+          <input type="checkbox" id="icon-toggle-1" class="test-section-toggle-image mdl-icon-toggle__input">
           <i class="mdl-icon-toggle__label material-icons">photo</i>
         </label>
+        <label class="test-section-debug-toggle mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="icon-toggle-2">
+          <input type="checkbox" id="icon-toggle-2" class="test-section-toggle-debug mdl-icon-toggle__input">
+          <i class="mdl-icon-toggle__label material-icons">bug_report</i>
+        </label>
         <div class="cartridge">
-          <img class='cartridge-image' src="http://localhost:3000/image.jpg"/>
+          <img class='cartridge-image' src="http://localhost/image.jpg"/>
         </div>
-      </div>
+        </div>
+        <div class="test-section-stdout">
+        </div>
 
     </section>
   </body>

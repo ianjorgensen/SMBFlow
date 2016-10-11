@@ -5,20 +5,37 @@ var cors = require('cors')
 
 var fs = require('fs');
 var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+
 
 var state = '';
 var scriptPath = './scripts';
 var dataFile = 'data.csv';
 
 var imaging;
-
+var settings = {
+  pictures: 150,
+  delay: 5,
+  focus: 30
+};
 
 app.use(express.static('scripts'));
 app.use(cors());
 
 app.get('/start', function(req, res) {
-  startImaging(req.query.path, req.query.pictures, req.query.delay, req.query.focus);
+  settings.path = 'flow' + '-' + Date.now();
+
+  if (req.query.pictures)  settings.pictures = req.query.pictures;
+  if (req.query.delay) settings.delay = req.query.delay;
+  if (req.query.focus) settings.focus = req.query.focus;
+
+  startImaging(settings);
   res.send('done');
+});
+
+app.get('/settings', function(req, res) {
+  res.json(settings);
 });
 
 app.get('/state', function(req, res) {
@@ -43,20 +60,22 @@ app.get('/data', function(req, res) {
   });
 });
 
-app.get('/stop', function() {
+app.get('/stop', function(req, res) {
   state = '';
-  spawn(scriptPath +'kill_octave.sh');
+  imaging && imaging.kill();
+  //spawn(scriptPath +'kill_octave.sh');
   res.send();
 });
 
-app.listen(3000, function () {
-  console.log('Listening on port 3000');
+server.listen(80, function () {
+  console.log('Running');
 });
 
-var startImaging = function(path, pictures, delay, focus) {
-  var imaging = spawn('./scripts/tick.js', ['-v', '-e']);
+var startImaging = function(settings) {
+  imaging = spawn('./scripts/tick.js',['-i ' + settings.pictures, '-d ' + settings.delay, settings.path, '-f ' + settings.focus ]);
 
   imaging.stdout.on('data', (data) => {
+    io.sockets.emit('stdout', data.toString().replace(/\n/g, '<br>'));
     var myRegexp = /\*(.*)\*/g;
     console.log(data.toString());
     match = myRegexp.exec(data.toString());

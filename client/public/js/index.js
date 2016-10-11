@@ -1,39 +1,74 @@
-$(function() {
-  var apiHost = 'http://localhost:3000/';
-  var cartridgeImageSrc = apiHost + 'image.jpg';
+var apiHost = 'http://localhost/';
+var cartridgeImageSrc = apiHost + 'image.jpg';
+var totalSeconds = 250;
+var cartridgeImageSrc = apiHost + 'image.jpg';
 
-  $('.home-section').show();
+
+$(function() {
+  var socket = io.connect(apiHost);
+
+  socket.on('stdout', function (data) {
+    console.log(data);
+    $('.test-section-stdout').prepend(data);
+  });
+
+  $.get(apiHost + 'settings', function(state) {
+    totalSeconds = state.pictures * state.delay;
+  });
+
+  $('.home-section').show(0);
 
   // start test
   $('.home-section-done-button').click(function() {
-    $('.home-section, .test-section').hide(function() {
-        $('.applySample-section').show();
+    $.get(apiHost + 'start', function(state) {
+      $('.home-section, .test-section').hide(0,function() {
+        $('.applySample-section').show(0);
+      });
     });
   });
 
   // stop test
   $('.applySample-section-close-button').click(function() {
     $.get(apiHost + 'stop', function(state) {
-      $('.applySample-section, .test-section').hide(function() {
-        $('.home-section').show();
+      $('.applySample-section, .test-section').hide(0,function() {
+        $('.home-section').show(0);
       });
     });
   });
 
+  $('.test-section-toggle-image').change(function() {
+    if (this.checked) {
+      $(".cartridge").show(0);
+    } else {
+      $(".cartridge").hide(0);
+    }
+  });
+
+  $('.test-section-toggle-debug').change(function() {
+    if (this.checked) {
+      $(".test-section-stdout").show(0);
+    } else {
+      $(".test-section-stdout").hide(0);
+    }
+  });
+
+
   var upateTestSection = function() {
-    $('.cartridge-image').attr("src", cartridgeImageSrc + "?timestamp=" + new Date().getTime());
+    $(".cartridge-image").attr("src", cartridgeImageSrc + "?timestamp=" + new Date().getTime());
     drawLineChart();
   };
-  
+
+  upateTestSection();
+
   setInterval(function() {
     //change to only call when test in progress
     upateTestSection();
 
     $.get(apiHost + 'state', function(state) {
-      if(state == 'ready') {
-        $('.applySample-section, .home-section').hide(function() {
+      if(state && state.indexOf('tick') != -1) {
+        $('.applySample-section, .home-section').hide(0, function() {
           upateTestSection();
-          $('.test-section').show();
+          $('.test-section').show(0);
         });
       }
     });
