@@ -1,6 +1,8 @@
 var spawn = require('child_process').spawn;
 var parse = require('csv-parse');
 var express = require('express');
+var cors = require('cors')
+
 var fs = require('fs');
 var app = express();
 
@@ -10,7 +12,9 @@ var dataFile = 'data.csv';
 
 var imaging;
 
-app.use(express.static('/mnt/'));
+
+app.use(express.static('scripts'));
+app.use(cors());
 
 app.get('/start', function(req, res) {
   startImaging(req.query.path, req.query.pictures, req.query.delay, req.query.focus);
@@ -50,8 +54,7 @@ app.listen(3000, function () {
 });
 
 var startImaging = function(path, pictures, delay, focus) {
-  var imaging = spawn('./scripts/tick.js', ['-v']);
-
+  var imaging = spawn('./scripts/tick.js', ['-v', '-e']);
 
   imaging.stdout.on('data', (data) => {
     var myRegexp = /\*(.*)\*/g;

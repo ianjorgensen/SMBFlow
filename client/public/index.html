@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>SMB Lateral Flow Analyzer</title>
+
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/material.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dialog-polyfill.css" />
+
+    <script
+      src="http://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+    <script src="js/material.min.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/dialog-polyfill.js"></script>
+    <script src="//d3js.org/d3.v4.min.js"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  </head>
+  <body>
+    <section class='home-section'>
+      <h1 class='typo-styles__demo mdl-typography--display-4'>insert cartridge to get started</h1>
+      <button class="home-section-done-button mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+        <i class="material-icons">send</i>
+      </button>
+    </section>
+    <section class='applySample-section'>
+      <button class="applySample-section-close-button mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+        <i class="material-icons">close</i>
+      </button>
+      <h1 class='typo-styles__demo mdl-typography--display-4'>apply sample</h1>
+      <div class="mdl-spinner mdl-js-spinner is-active"></div>
+    </section>
+    <section class='test-section'>
+      <div class='test-section-chart'></div>
+      <div>
+        <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="icon-toggle-1">
+          <input type="checkbox" id="icon-toggle-1" class="mdl-icon-toggle__input" checked>
+          <i class="mdl-icon-toggle__label material-icons">photo</i>
+        </label>
+        <div class="cartridge">
+          <img class='cartridge-image' src="http://localhost:3000/image.jpg"/>
+        </div>
+      </div>
+
+    </section>
+  </body>
+</html>
