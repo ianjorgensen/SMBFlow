@@ -1,4 +1,4 @@
-var spawn = require('child_process').spawn;
+var exec = require('child_process').exec;
 var parse = require('csv-parse');
 var express = require('express');
 var cors = require('cors')
@@ -10,7 +10,7 @@ var io = require('socket.io')(server);
 
 
 var state = '';
-var scriptPath = './scripts';
+var scriptPath = '~/../../mnt/output';
 var dataFile = 'output.csv';
 
 var imaging;
@@ -20,7 +20,7 @@ var settings = {
   focus: 30
 };
 
-app.use(express.static('~/../../mnt/output'));
+app.use(express.static('/../../mnt/output'));
 app.use(cors());
 
 app.get('/start', function(req, res) {
@@ -43,7 +43,7 @@ app.get('/state', function(req, res) {
 });
 
 app.get('/data', function(req, res) {
-  fs.readFile(scriptPath + '/' + dataFile, 'utf8', (err, data) => {
+  fs.readFile('/../../mnt/output/' + dataFile, 'utf8', (err, data) => {
     if(err) {
       res.json({error: err});
       return;
@@ -62,9 +62,14 @@ app.get('/data', function(req, res) {
 
 app.get('/stop', function(req, res) {
   state = '';
-  imaging && imaging.kill();
-  spawn('~/../../mnt/output/server/kill_octave.sh');
-  res.send();
+	if(imaging){
+setTimeout(function(){
+  exec('sudo pkill octave')
+var kill = 'sudo kill $(pgrep -P ' + imaging.pid + ')';
+console.log('kill', kill);
+exec(kill);  }, 2000);
+}
+res.send('true');
 });
 
 server.listen(80, function () {
@@ -72,7 +77,7 @@ server.listen(80, function () {
 });
 
 var startImaging = function(settings) {
-  imaging = spawn('~/../../mnt/output/server/imaging.sh',['-i ' + settings.pictures, '-d ' + settings.delay, settings.path, '-f ' + settings.focus ]);
+  imaging = exec('sudo sh ~/../../mnt/server/imaging.sh -i ' + settings.pictures + ' -d ' + settings.delay + ' -p ' + settings.path + ' -f ' + settings.focus,{gid:1234});
 
   imaging.stdout.on('data', (data) => {
     io.sockets.emit('stdout', data.toString().replace(/\n/g, '<br>'));
@@ -87,7 +92,6 @@ var startImaging = function(settings) {
   });
 
   imaging.stderr.on('data', (data) => {
-    state = '';
     console.log(`stderr: ${data}`);
   });
 
