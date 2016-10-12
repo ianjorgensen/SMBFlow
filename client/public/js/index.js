@@ -1,4 +1,4 @@
-var apiHost = 'http://localhost/';
+var apiHost = 'http://10.0.1.127/';
 var cartridgeImageSrc = apiHost + 'image.jpg';
 var totalSeconds = 250;
 var cartridgeImageSrc = apiHost + 'image.jpg';

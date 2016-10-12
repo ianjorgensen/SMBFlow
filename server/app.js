@@ -15,7 +15,7 @@ var dataFile = 'data.csv';
 
 var imaging;
 var settings = {
-  pictures: 150,
+  pictures: 200,
   delay: 5,
   focus: 30
 };
