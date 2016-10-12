@@ -11,7 +11,7 @@ var io = require('socket.io')(server);
 
 var state = '';
 var scriptPath = './scripts';
-var dataFile = 'data.csv';
+var dataFile = 'output.csv';
 
 var imaging;
 var settings = {
@@ -20,7 +20,7 @@ var settings = {
   focus: 30
 };
 
-app.use(express.static('scripts'));
+app.use(express.static('~/../../mnt/output'));
 app.use(cors());
 
 app.get('/start', function(req, res) {
@@ -63,7 +63,7 @@ app.get('/data', function(req, res) {
 app.get('/stop', function(req, res) {
   state = '';
   imaging && imaging.kill();
-  //spawn(scriptPath +'kill_octave.sh');
+  spawn('~/../../mnt/output/server/kill_octave.sh');
   res.send();
 });
 
@@ -72,7 +72,7 @@ server.listen(80, function () {
 });
 
 var startImaging = function(settings) {
-  imaging = spawn('./scripts/tick.js',['-i ' + settings.pictures, '-d ' + settings.delay, settings.path, '-f ' + settings.focus ]);
+  imaging = spawn('~/../../mnt/output/server/imaging.sh',['-i ' + settings.pictures, '-d ' + settings.delay, settings.path, '-f ' + settings.focus ]);
 
   imaging.stdout.on('data', (data) => {
     io.sockets.emit('stdout', data.toString().replace(/\n/g, '<br>'));

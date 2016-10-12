@@ -1,7 +1,6 @@
-var apiHost = 'http://10.0.1.127/';
-var cartridgeImageSrc = apiHost + 'image.jpg';
-var totalSeconds = 250;
-var cartridgeImageSrc = apiHost + 'image.jpg';
+var apiHost = 'http://10.0.1.115/';
+var totalSeconds = 200 * 5;
+var cartridgeImageSrc = apiHost + 'image_current.jpg';
 
 
 $(function() {
@@ -65,7 +64,7 @@ $(function() {
     upateTestSection();
 
     $.get(apiHost + 'state', function(state) {
-      if(state && state.indexOf('tick') != -1) {
+      if(state && state.indexOf('info3') != -1) {
         $('.applySample-section, .home-section').hide(0, function() {
           upateTestSection();
           $('.test-section').show(0);
