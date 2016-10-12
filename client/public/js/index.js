@@ -65,7 +65,6 @@ $(function() {
       if(!state) {
         return;
       }
-
       // filling detected
       if(state.indexOf('info1') != -1) {
         $('.applySample-section h1').html('filling');
@@ -80,6 +79,6 @@ $(function() {
       }
     });
   }, 1000);
-  
+
   upateTestSection();
 });
