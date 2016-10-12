@@ -1,14 +1,12 @@
 var parseData = function(data) {
   var readings = [];
-
   // extract id's
-
   for (var i = 1; i < data[0].length; i++) {
     var id = data[0][i];
     var values = [];
 
     for (var j = 1; j < data.length; j++) {
-      values.push({seconds: parseInt(data[j][0]), contrast: parseInt(data[j][i])});
+      values.push({seconds: parseFloat(data[j][0]), contrast: parseFloat(data[j][i])});
     }
 
     readings.push({
@@ -48,10 +46,10 @@ var drawLineChart = function() {
        return d.seconds;
     }));
 
-    /*y.domain([
-      d3.min(reagentLines, function(c) { return d3.min(c.values, function(d) { return d.contrast; }); }),
-      d3.max(reagentLines, function(c) { return d3.max(c.values, function(d) { return d.contrast; }); })
-    ]);*/
+    x.domain([
+      0,
+      d3.max(reagentLines, function(c) { return d3.max(c.values, function(d) { return d.seconds; }); }) + 100
+    ]);
 
     var miny = d3.min(reagentLines, function(c) { return d3.min(c.values, function(d) { return d.contrast; }); })
 
@@ -60,8 +58,6 @@ var drawLineChart = function() {
     }
 
     y.domain([miny, 10]);
-    x.domain([0, totalSeconds]);
-
     z.domain(reagentLines.map(function(c) { return c.id; }));
 
     g.append("g")

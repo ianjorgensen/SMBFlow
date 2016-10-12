@@ -40,7 +40,7 @@ h1 {
 }
 
 .cartridge-image {
-  width: 200px;
+  width: 300px;
   /*-webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
   -o-transform: rotate(90deg);
@@ -65,7 +65,7 @@ h1 {
 }
 
 
-.home-section, .applySample-section, .test-section, .cartridge {
+.applySample-section, .test-section, .cartridge {
   display: none;
 }
 
@@ -79,4 +79,7 @@ h1 {
   position: absolute;
   bottom: 20px !important;
   right: 60px !important;
+}
+.stderr {
+  color: red;
 }

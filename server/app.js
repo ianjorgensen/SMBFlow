@@ -10,7 +10,7 @@ var io = require('socket.io')(server);
 
 
 var state = '';
-var scriptPath = '~/../../mnt/output';
+var scriptPath = '/../../mnt';
 var dataFile = 'output.csv';
 
 var imaging;
@@ -20,7 +20,7 @@ var settings = {
   focus: 30
 };
 
-app.use(express.static('/../../mnt/output'));
+app.use(express.static(scriptPath));
 app.use(cors());
 
 app.get('/start', function(req, res) {
@@ -43,7 +43,7 @@ app.get('/state', function(req, res) {
 });
 
 app.get('/data', function(req, res) {
-  fs.readFile('/../../mnt/output/' + dataFile, 'utf8', (err, data) => {
+  fs.readFile(scriptPath + '/output/' + dataFile, 'utf8', (err, data) => {
     if(err) {
       res.json({error: err});
       return;
@@ -62,14 +62,19 @@ app.get('/data', function(req, res) {
 
 app.get('/stop', function(req, res) {
   state = '';
-	if(imaging){
-setTimeout(function(){
-  exec('sudo pkill octave')
-var kill = 'sudo kill $(pgrep -P ' + imaging.pid + ')';
-console.log('kill', kill);
-exec(kill);  }, 2000);
-}
-res.send('true');
+
+  var tryTokillAll = function() {
+    if(imaging) {
+      exec('sudo pkill octave');
+      var kill = 'sudo kill $(pgrep -P ' + imaging.pid + ')';
+      console.log('kill', kill);
+      exec(kill);
+    }
+  }
+
+  setTimeout(tryTokillAll, 2000);
+  tryTokillAll();
+  res.send('true');
 });
 
 server.listen(80, function () {
@@ -77,12 +82,14 @@ server.listen(80, function () {
 });
 
 var startImaging = function(settings) {
-  imaging = exec('sudo sh ~/../../mnt/server/imaging.sh -i ' + settings.pictures + ' -d ' + settings.delay + ' -p ' + settings.path + ' -f ' + settings.focus,{gid:1234});
+  imaging = exec('sudo sh ~''/../../mnt/server/imaging.sh -i ' + settings.pictures + ' -d ' + settings.delay + ' -p ' + settings.path + ' -f ' + settings.focus,{gid:1234});
 
   imaging.stdout.on('data', (data) => {
     io.sockets.emit('stdout', data.toString().replace(/\n/g, '<br>'));
     var myRegexp = /\*(.*)\*/g;
+
     console.log(data.toString());
+
     match = myRegexp.exec(data.toString());
 
     if (match && match[1]) {
@@ -92,6 +99,7 @@ var startImaging = function(settings) {
   });
 
   imaging.stderr.on('data', (data) => {
+    io.sockets.emit('stderr', data.toString().replace(/\n/g, '<br>'));
     console.log(`stderr: ${data}`);
   });
 
