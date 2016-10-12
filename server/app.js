@@ -20,7 +20,7 @@ var settings = {
   focus: 30
 };
 
-app.use(express.static(scriptPath));
+app.use(express.static(scriptPath + '/output'));
 app.use(cors());
 
 app.get('/start', function(req, res) {
@@ -82,7 +82,7 @@ server.listen(80, function () {
 });
 
 var startImaging = function(settings) {
-  imaging = exec('sudo sh ~''/../../mnt/server/imaging.sh -i ' + settings.pictures + ' -d ' + settings.delay + ' -p ' + settings.path + ' -f ' + settings.focus,{gid:1234});
+  imaging = exec('sudo sh ~' + scriptPath + '/server/imaging.sh -i ' + settings.pictures + ' -d ' + settings.delay + ' -p ' + settings.path + ' -f ' + settings.focus,{gid:1234});
 
   imaging.stdout.on('data', (data) => {
     io.sockets.emit('stdout', data.toString().replace(/\n/g, '<br>'));
