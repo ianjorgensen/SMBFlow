@@ -83,3 +83,7 @@ h1 {
 .stderr {
   color: red;
 }
+
+body {
+  overflow: hidden;
+}

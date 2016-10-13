@@ -52,12 +52,16 @@ var drawLineChart = function() {
     ]);
 
     var miny = d3.min(reagentLines, function(c) { return d3.min(c.values, function(d) { return d.contrast; }); })
+    var maxy = d3.max(reagentLines, function(c) { return d3.max(c.values, function(d) { return d.contrast; }); })
 
     if (miny > 0) {
       miny = 0;
     }
 
-    y.domain([miny, 10]);
+    if (maxy < 10) {
+      maxy = 10;
+    }
+    y.domain([miny, maxy]);
     z.domain(reagentLines.map(function(c) { return c.id; }));
 
     g.append("g")
