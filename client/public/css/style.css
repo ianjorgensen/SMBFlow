@@ -59,7 +59,7 @@ h1 {
 }
 
 .applySample-section-close-button {
-  position: absolute;
+  position: fixed;
   top: 20px;
   right: 20px;
 }
@@ -70,20 +70,16 @@ h1 {
 }
 
 .test-section-toggle {
-  position: absolute;
+  position: fixed;
   bottom: 20px !important;
   right: 20px !important;
 }
 
 .test-section-debug-toggle {
-  position: absolute;
+  position: fixed;
   bottom: 20px !important;
   right: 60px !important;
 }
 .stderr {
   color: red;
-}
-
-body {
-  overflow: hidden;
 }
