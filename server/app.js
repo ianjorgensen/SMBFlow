@@ -62,16 +62,6 @@ app.get('/data', function(req, res) {
 
 app.get('/stop', function(req, res) {
   state = '';
-
-  var tryTokillAll = function() {
-    if(imaging) {
-      exec('sudo pkill octave');
-      var kill = 'sudo kill $(pgrep -P ' + imaging.pid + ')';
-      console.log('kill', kill);
-      exec(kill);
-    }
-  }
-
   setTimeout(tryTokillAll, 2000);
   tryTokillAll();
   res.send('true');
@@ -82,6 +72,7 @@ server.listen(80, function () {
 });
 
 var startImaging = function(settings) {
+  tryTokillAll();
   imaging = exec('sudo sh ~' + scriptPath + '/server/imaging.sh -i ' + settings.pictures + ' -d ' + settings.delay + ' -p ' + settings.path + ' -f ' + settings.focus,{gid:1234});
 
   imaging.stdout.on('data', (data) => {
@@ -108,3 +99,12 @@ var startImaging = function(settings) {
     console.log(`child process exited with code ${code}`);
   });
 };
+
+var tryTokillAll = function() {
+  if(imaging) {
+    exec('sudo pkill octave');
+    var kill = 'sudo kill $(pgrep -P ' + imaging.pid + ')';
+    console.log('kill', kill);
+    exec(kill);
+  }
+}
