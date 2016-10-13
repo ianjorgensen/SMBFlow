@@ -63,6 +63,7 @@ app.get('/data', function(req, res) {
 app.get('/stop', function(req, res) {
   state = '';
   setTimeout(tryTokillAll, 2000);
+  exec('echo "1" > /sys/class/gpio/gpio17/value');
   tryTokillAll();
   res.send('true');
 });
