@@ -1,84 +1,106 @@
-var apiHost = 'http://10.0.1.115/';
-var totalSeconds = 200 * 5;
-var cartridgeImageSrc = apiHost + 'image_current.jpg';
+// change host here
+var host = '10.0.1.2';
+var state = '';
 
 $(function() {
-  // subscribe to imaging console output
-  var socket = io.connect(apiHost);
-  socket.on('stdout', function (data) {
-    console.log(data);
-    $('.test-section-stdout').prepend(data);
-  });
-  socket.on('stderr', function (data) {
-    console.log(data);
-    $('.test-section-stdout').prepend('<span class="stderr">' + data + '</span>');
-  });
-  // get imaging script settings
-  $.get(apiHost + 'settings', function(state) {
-    totalSeconds = state.pictures * state.delay;
-  });
-  // init display home section
-  $('.home-section').show(0);
-  // start test
-  $('.home-section-done-button').click(function() {
-    $.get(apiHost + 'start', function(state) {
-      $('.home-section, .test-section').hide(0,function() {
-        $('.applySample-section').show(0);
-      });
+  var api = Api(host);
+
+  show('.home');
+  initRemoteConsole();
+
+  $('.home button').click(function() {
+    api.start(function() {
+      state = 'started';
+      show('.measurment', '.measurment-start');
     });
   });
-  // stop test
-  $('.applySample-section-close-button').click(function() {
-    $.get(apiHost + 'stop', function(state) {
-      $('.applySample-section, .test-section').hide(0,function() {
-        $('.home-section').show(0);
-        $('.applySample-section h1').html('apply sample');
-      });
+
+  $('.removeCartridge button').click(function() {
+    show('.home');
+  });
+
+  $('.measurment-cancel, .measurment-results-positive-button , .measurment-results-negative-button').click(function() {
+    api.stop(function() {
+      show('.removeCartridge');
     });
   });
-  // toggle view image
-  $('.test-section-toggle-image').change(function() {
+
+  $('.measurment-photo-toggle input').change(function() {
     if (this.checked) {
-      $(".cartridge").show(0);
+      $('.measurment-results-chart').addClass('measurment-results-chart-shown');
+      $('.measurment-cartridge').show(0);
     } else {
-      $(".cartridge").hide(0);
-    }
-  });
-  // toggle view console output
-  $('.test-section-toggle-debug').change(function() {
-    if (this.checked) {
-      $(".test-section-stdout").show(0);
-    } else {
-      $(".test-section-stdout").hide(0);
+      $('.measurment-results-chart').removeClass('measurment-results-chart-shown');
+      $('.measurment-cartridge').hide(0);
     }
   });
 
-  var upateTestSection = function() {
-    $(".cartridge-image").attr("src", cartridgeImageSrc + "?timestamp=" + new Date().getTime());
-    drawLineChart();
-  };
+  $('.measurment-debug-toggle input').change(function() {
+    if (this.checked) {
+      $(".measurment-stdout").show(0);
+    } else {
+      $(".measurment-stdout").hide(0);
+    }
+  });
 
-  setInterval(function() {
-    //change to only call when test in progress
-    upateTestSection();
-    $.get(apiHost + 'state', function(state) {
-      if(!state) {
-        return;
-      }
-      // filling detected
+  var tick = function() {
+    if (!state) {
+      return;
+    }
+
+    //upate image
+    $(".cartridge-image").attr("src","http://" + host + "/image_current.jpg?timestamp=" + new Date().getTime());
+
+    api.state(function(state) {
       if(state.indexOf('info1') != -1) {
-        $('.applySample-section h1').html('filling');
+        show('.measurment', '.measurment-filling');
       }
-      // ready to display data
+
+      if(state.indexOf('info2') != -1) {
+        show('.measurment', '.measurment-analyzing');
+      }
+
       if(state.indexOf('info3') != -1) {
-        // show chart section
-        $('.applySample-section, .home-section').hide(0, function() {
-          upateTestSection();
-          $('.test-section').show(0);
+        api.data(function(data) {
+          if (data[0] && data[0].length) {
+
+            if (!$('.measurment-results').is(":visible")) {
+              show('.measurment', '.measurment-results');
+            }
+
+            drawLineChart(data);
+          }
         });
       }
     });
-  }, 1000);
+  };
 
-  upateTestSection();
+  tick();
+  setInterval(tick, 2000);
 });
+
+var initRemoteConsole = function() {
+  var socket = io.connect('http://' + host);
+
+  socket.on('stdout', function (data) {
+    if (!state) {
+      state = 'started';
+      show('measurment', 'measurment-start');
+    }
+
+    $('.measurment-stdout').prepend(data);
+  });
+  socket.on('stderr', function (data) {
+    $('.measurment-stdout').prepend('<span class="stderr">' + data + '</span>');
+  });
+};
+
+var show = function(page, subPage) {
+  $('.page').hide();
+  $(page + '.page').show();
+
+  if (subPage) {
+    $('.page-sub').hide();
+    $(subPage + '.page-sub').show();
+  }
+};

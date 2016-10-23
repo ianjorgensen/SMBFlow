@@ -18,16 +18,19 @@ var parseData = function(data) {
   return readings;
 };
 
-var drawLineChart = function() {
-  $.get(apiHost + 'data', function(data) {
+var drawLineChart = function(data) {
     reagentLines = parseData(data);
 
     d3.select("svg") && d3.select("svg").remove();
 
-    $('.test-section-chart').html('<svg width="700" height="500"></svg>');
+    $('.measurment-results-chart').html('<svg></svg>');
 
-    var svg = d3.select("svg"),
-        margin = {top: 20, right: 80, bottom: 30, left: 50},
+    var svg = d3.select("svg");
+
+    svg.attr("width", $('.measurment-results-chart').width());
+    svg.attr("height", $('.measurment-results-chart').height());
+
+    var margin = {top: 20, right: 20, bottom: 30, left: 20},
         width = svg.attr("width") - margin.left - margin.right,
         height = svg.attr("height") - margin.top - margin.bottom,
         g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -48,7 +51,7 @@ var drawLineChart = function() {
 
     x.domain([
       0,
-      d3.max(reagentLines, function(c) { return d3.max(c.values, function(d) { return d.seconds; }); }) + 100
+      d3.max(reagentLines, function(c) { return d3.max(c.values, function(d) { return d.seconds; }); }) + 30
     ]);
 
     var miny = d3.min(reagentLines, function(c) { return d3.min(c.values, function(d) { return d.contrast; }); })
@@ -96,5 +99,4 @@ var drawLineChart = function() {
         .attr("dy", "0.35em")
         .style("font", "10px sans-serif")
         .text(function(d) { return d.id; });
-  });
 };

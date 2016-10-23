@@ -5,80 +5,91 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
 
-    <title>SMB Lateral Flow Analyzer</title>
+    <title>Witness Brick</title>
 
+    <link rel="apple-touch-icon" href="/img/icon.png">
     <link rel="manifest" href="/manifest.json">
 
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/material.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/dialog-polyfill.css" />
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/lib/reset.css">
+    <link rel="stylesheet" href="css/lib/mdl.min.css">
+    <link rel="stylesheet" href="css/lib/mdlFonts.css">
+    <link rel="stylesheet" href="css/lib/dialog-polyfill.css" />
 
-    <script
-      src="http://code.jquery.com/jquery-3.1.1.min.js"
-      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-      crossorigin="anonymous"></script>
-    <script src="js/material.min.js"></script>
-    <script src="js/index.js"></script>
+    <!-- change host here -->
+    <script src="//10.0.1.2/socket.io/socket.io.js"></script>
+
+    <script src="js/lib/dialog-polyfill.js"></script>
+    <script src="js/lib/material.min.js"></script>
+    <script src="js/lib/jquery-3.1.1.min.js"></script>
+    <script src="js/lib/d3.min.js"></script>
+
+    <script src="js/api.js"></script>
     <script src="js/chart.js"></script>
-    <script src="js/dialog-polyfill.js"></script>
-    <script src="//d3js.org/d3.v4.min.js"></script>
-    <script src="//10.0.1.115/socket.io/socket.io.js"></script>
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="js/index.js"></script>
   </head>
   <body>
-    <section class='home-section'>
-      <h1 class='typo-styles__demo mdl-typography--display-4'>insert cartridge to get started</h1>
+    <section class='home page page-middle'>
+      <h1 class='typo-styles__demo mdl-typography--display-4'>Insert a cartridge to star measurment</h1>
       <button class="home-section-done-button mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-        <i class="material-icons">send</i>
+        <i class="material-icons">check</i>
       </button>
     </section>
-    <section class='applySample-section'>
-      <button class="applySample-section-close-button mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-        <i class="material-icons">close</i>
+    <section class='removeCartridge page page-middle'>
+      <h1 class='typo-styles__demo mdl-typography--display-4'>Remove cartridge</h1>
+      <button class="home-section-done-button mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+        <i class="material-icons">check</i>
       </button>
-      <h1 class='typo-styles__demo mdl-typography--display-4'>apply sample</h1>
-      <div class="mdl-spinner mdl-js-spinner is-active"></div>
-
-      <label class="test-section-toggle mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="icon-toggle-1">
-        <input type="checkbox" id="icon-toggle-1" class="test-section-toggle-image mdl-icon-toggle__input">
-        <i class="mdl-icon-toggle__label material-icons">photo</i>
-      </label>
-      <label class="test-section-debug-toggle mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="icon-toggle-2">
-        <input type="checkbox" id="icon-toggle-2" class="test-section-toggle-debug mdl-icon-toggle__input">
-        <i class="mdl-icon-toggle__label material-icons">bug_report</i>
-      </label>
-      <div class="cartridge">
+    </section>
+    <section class='measurment page'>
+      <section class='measurment-start page-sub page-middle'>
+        <button class="measurment-cancel mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+          <i class="material-icons">close</i>
+        </button>
+        <h1 class='typo-styles__demo mdl-typography--display-4'>Apply sample</h1>
+        <div class="mdl-spinner mdl-js-spinner is-active"></div>
+      </section>
+      <section class='measurment-filling page-sub page-middle'>
+        <button class="measurment-cancel mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+          <i class="material-icons">close</i>
+        </button>
+        <h1 class='typo-styles__demo mdl-typography--display-4'>Filling started</h1>
+        <div class="mdl-spinner mdl-js-spinner is-active"></div>
+      </section>
+      <section class='measurment-analyzing page-sub page-middle'>
+        <button class="measurment-cancel mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+          <i class="material-icons">close</i>
+        </button>
+        <h1 class='typo-styles__demo mdl-typography--display-4'>Analyzing sample</h1>
+        <div class="mdl-spinner mdl-js-spinner is-active"></div>
+      </section>
+      <section class='measurment-results page-sub'>
+        <div class='measurment-results-chart'></div>
+        <div class='measurment-results-buttons'>
+          <button class="measurment-results-negative-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+            Negative
+          </button>
+          <button class="measurment-results-positive-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+            Positive
+          </button>
+        </div>
+      </section>
+      <div class="measurment-cartridge  measurment-cartridge-middle">
         <img class='cartridge-image' src=""/>
       </div>
-      </div>
-      <div class="test-section-stdout">
-      </div>
-    </section>
-    <section class='test-section'>
-      <div class='test-section-container'>
-      <button class="applySample-section-close-button mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-        <i class="material-icons">close</i>
-      </button>
-      <div class='test-section-chart'></div>
-
-        <label class="test-section-toggle mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="icon-toggle-1">
-          <input type="checkbox" id="icon-toggle-1" class="test-section-toggle-image mdl-icon-toggle__input">
+      <div class="measurment-toggles">
+        <label class="measurment-photo-toggle mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="icon-toggle-1">
+          <input type="checkbox" id="icon-toggle-1" class="mdl-icon-toggle__input">
           <i class="mdl-icon-toggle__label material-icons">photo</i>
         </label>
-        <label class="test-section-debug-toggle mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="icon-toggle-2">
-          <input type="checkbox" id="icon-toggle-2" class="test-section-toggle-debug mdl-icon-toggle__input">
+        <label class="measurment-debug-toggle mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="icon-toggle-2">
+          <input type="checkbox" id="icon-toggle-2" class="mdl-icon-toggle__input">
           <i class="mdl-icon-toggle__label material-icons">bug_report</i>
         </label>
-        <div class="cartridge">
-          <img class='cartridge-image' src=""/>
-        </div>
-        </div>
-        <div class="test-section-stdout">
-        </div>
-
+      </div>
+      <div class="measurment-stdout"></div>
     </section>
   </body>
 </html>
