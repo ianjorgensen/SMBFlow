@@ -1,5 +1,5 @@
 // change host here
-var host = '10.0.1.2';
+var host = '10.0.1.82';
 var state = '';
 
 $(function() {
