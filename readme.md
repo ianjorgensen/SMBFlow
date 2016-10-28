@@ -6,7 +6,7 @@ The application consist of two components. And imaging server and a client serve
 
 ###Imaging Server:
 
-A http server that start the imaging scripts, with desired parameters and pipes stdout of the scripts via websockets.
+A http server that exposes and api that starts the imaging scripts with the desired parameters and pipes stdout of the scripts via websockets.
 
 ####install dependencies
 
